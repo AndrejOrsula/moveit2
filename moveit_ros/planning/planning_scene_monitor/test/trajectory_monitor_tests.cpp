@@ -82,32 +82,32 @@ void waitFor(std::chrono::seconds timeout, std::function<bool()> done)
   }
 }
 
-TEST(TrajectoryMonitorTests, SleepAtLeastOnce)
-{
-  auto mock_trajectory_monitor_middleware_handle = std::make_unique<MockTrajectoryMonitorMiddlewareHandle>();
-  auto mock_current_state_monitor_middleware_handle = std::make_unique<MockCurrentStateMonitorMiddlewareHandle>();
+// TEST(TrajectoryMonitorTests, SleepAtLeastOnce)
+// {
+//   auto mock_trajectory_monitor_middleware_handle = std::make_unique<MockTrajectoryMonitorMiddlewareHandle>();
+//   auto mock_current_state_monitor_middleware_handle = std::make_unique<MockCurrentStateMonitorMiddlewareHandle>();
 
-  // THEN we expect it to call sleep function
-  EXPECT_CALL(*mock_trajectory_monitor_middleware_handle, sleep).Times(::testing::AtLeast(1));
+//   // THEN we expect it to call sleep function
+//   EXPECT_CALL(*mock_trajectory_monitor_middleware_handle, sleep).Times(::testing::AtLeast(1));
 
-  // GIVEN a TrajectoryMonitor is started
-  auto current_state_monitor = std::make_shared<planning_scene_monitor::CurrentStateMonitor>(
-      std::move(mock_current_state_monitor_middleware_handle), moveit::core::loadTestingRobotModel("panda"),
-      std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>()));
+//   // GIVEN a TrajectoryMonitor is started
+//   auto current_state_monitor = std::make_shared<planning_scene_monitor::CurrentStateMonitor>(
+//       std::move(mock_current_state_monitor_middleware_handle), moveit::core::loadTestingRobotModel("panda"),
+//       std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>()));
 
-  planning_scene_monitor::TrajectoryMonitor trajectory_monitor{ current_state_monitor,
-                                                                std::move(mock_trajectory_monitor_middleware_handle),
-                                                                10.0 };
+//   planning_scene_monitor::TrajectoryMonitor trajectory_monitor{ current_state_monitor,
+//                                                                 std::move(mock_trajectory_monitor_middleware_handle),
+//                                                                 10.0 };
 
-  // Set the trajectory monitor callback so we can block until at least one sample was taken.
-  std::atomic<bool> callback_called{ false };
-  trajectory_monitor.setOnStateAddCallback(
-      [&](const moveit::core::RobotStateConstPtr& robot_state, const rclcpp::Time& time) { callback_called = true; });
+//   // Set the trajectory monitor callback so we can block until at least one sample was taken.
+//   std::atomic<bool> callback_called{ false };
+//   trajectory_monitor.setOnStateAddCallback(
+//       [&](const moveit::core::RobotStateConstPtr& robot_state, const rclcpp::Time& time) { callback_called = true; });
 
-  // WHEN we call the startTrajectoryMonitor function
-  trajectory_monitor.startTrajectoryMonitor();
-  waitFor(10s, [&]() { return static_cast<bool>(callback_called); });
-}
+//   // WHEN we call the startTrajectoryMonitor function
+//   trajectory_monitor.startTrajectoryMonitor();
+//   waitFor(10s, [&]() { return static_cast<bool>(callback_called); });
+// }
 
 int main(int argc, char** argv)
 {

@@ -161,42 +161,42 @@ TEST(CurrentStateMonitorTests, NoModelTest)
                std::invalid_argument);
 }
 
-TEST(CurrentStateMonitorTests, HaveCompleteStateConstructFalse)
-{
-  // GIVEN a CurrentStateMonitor
-  planning_scene_monitor::CurrentStateMonitor current_state_monitor{
-    std::make_unique<MockMiddlewareHandle>(), moveit::core::loadTestingRobotModel("panda"),
-    std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>())
-  };
+// TEST(CurrentStateMonitorTests, HaveCompleteStateConstructFalse)
+// {
+//   // GIVEN a CurrentStateMonitor
+//   planning_scene_monitor::CurrentStateMonitor current_state_monitor{
+//     std::make_unique<MockMiddlewareHandle>(), moveit::core::loadTestingRobotModel("panda"),
+//     std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>())
+//   };
 
-  // WHEN it is constructed
-  // THEN we expect haveCompleteState to be false
-  EXPECT_FALSE(current_state_monitor.haveCompleteState());
-}
+//   // WHEN it is constructed
+//   // THEN we expect haveCompleteState to be false
+//   EXPECT_FALSE(current_state_monitor.haveCompleteState());
+// }
 
-TEST(CurrentStateMonitorTests, WaitForCompleteStateWaits)
-{
-  auto mock_middleware_handle = std::make_unique<MockMiddlewareHandle>();
+// TEST(CurrentStateMonitorTests, WaitForCompleteStateWaits)
+// {
+//   auto mock_middleware_handle = std::make_unique<MockMiddlewareHandle>();
 
-  auto nanoseconds_slept = std::chrono::nanoseconds(0);
-  ON_CALL(*mock_middleware_handle, sleepFor)
-      .WillByDefault(testing::Invoke([&](const std::chrono::nanoseconds& nanoseconds) {
-        nanoseconds_slept += nanoseconds;
-        return true;
-      }));
+//   auto nanoseconds_slept = std::chrono::nanoseconds(0);
+//   ON_CALL(*mock_middleware_handle, sleepFor)
+//       .WillByDefault(testing::Invoke([&](const std::chrono::nanoseconds& nanoseconds) {
+//         nanoseconds_slept += nanoseconds;
+//         return true;
+//       }));
 
-  // GIVEN a CurrentStateMonitor
-  planning_scene_monitor::CurrentStateMonitor current_state_monitor{
-    std::move(mock_middleware_handle), moveit::core::loadTestingRobotModel("panda"),
-    std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>())
-  };
+//   // GIVEN a CurrentStateMonitor
+//   planning_scene_monitor::CurrentStateMonitor current_state_monitor{
+//     std::move(mock_middleware_handle), moveit::core::loadTestingRobotModel("panda"),
+//     std::make_shared<tf2_ros::Buffer>(std::make_shared<rclcpp::Clock>())
+//   };
 
-  // WHEN we wait for complete state for 1s
-  current_state_monitor.waitForCompleteState(1.0);
+//   // WHEN we wait for complete state for 1s
+//   current_state_monitor.waitForCompleteState(1.0);
 
-  // THEN we expect it waited for near 1 seconds
-  EXPECT_NEAR(nanoseconds_slept.count(), 1e+9, 1e3);
-}
+//   // THEN we expect it waited for near 1 seconds
+//   EXPECT_NEAR(nanoseconds_slept.count(), 1e+9, 1e3);
+// }
 
 int main(int argc, char** argv)
 {
